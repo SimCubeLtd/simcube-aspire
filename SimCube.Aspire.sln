@@ -14,6 +14,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{12D2DFC2-249
 		.editorconfig = .editorconfig
 		.dockerignore = .dockerignore
 		LICENSE.md = LICENSE.md
+		.whitesource = .whitesource
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77D9AF9A-2D81-4644-9977-CC1E1B0F1F9F}"
