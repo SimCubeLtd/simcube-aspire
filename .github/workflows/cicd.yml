@@ -1,16 +1,17 @@
 name: CICD
 
+env:
+  NUGET_SOURCE: https://api.nuget.org/v3/index.json
+  NUGET_API_KEY: ${{ secrets.PUBLIC_NUGET_TOKEN }}
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  DOTNET_CONFIGURATION: Release
+
 on:
   push:
-    branches: [ 'main' ]
-    paths: [
-      'src/**',
-      'eng/**',
-      'tests/**',
-      'Directory.Build.props',
-      'Directory.Build.targets',
-      'Directory.Packages.props',
-    ]
+    tags:
+      - "*"
 
 jobs:
   clean:
@@ -36,12 +37,7 @@ jobs:
       run: eng/ci.sh build
 
     - name: Run pack
-      env:
-        DOTNET_CONFIGURATION: Release
       run: eng/ci.sh pack
 
     - name: Push to NuGet
-      env:
-        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
-        NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
       run: eng/ci.sh push
