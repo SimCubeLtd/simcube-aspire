@@ -1,0 +1,46 @@
+name: CICD
+
+on:
+  push:
+    branches: [ 'main' ]
+    paths: [
+      'src/**',
+      'eng/**',
+      'tests/**',
+      'Directory.Build.props',
+      'Directory.Build.targets',
+      'Directory.Packages.props',
+    ]
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .Net SDK
+      uses: actions/setup-dotnet@v4
+
+    - name: Run clean
+      run: eng/ci.sh clean
+
+    - name: Run restore
+      run: eng/ci.sh restore
+
+    - name: Run build
+      run: eng/ci.sh build
+
+    - name: Run pack
+      env:
+        DOTNET_CONFIGURATION: Release
+      run: eng/ci.sh pack
+
+    - name: Push to NuGet
+      env:
+        NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        NUGET_SOURCE: ${{ secrets.NUGET_SOURCE }}
+      run: eng/ci.sh push

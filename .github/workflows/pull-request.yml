@@ -1,0 +1,26 @@
+name: Pull Request
+
+on:
+  pull_request:
+
+jobs:
+  clean:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Setup .Net SDK
+      uses: actions/setup-dotnet@v4
+
+    - name: Run clean
+      run: eng/ci.sh clean
+
+    - name: Run restore
+      run: eng/ci.sh restore
+
+    - name: Run build
+      run: eng/ci.sh build

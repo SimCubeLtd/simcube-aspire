@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{12D2DFC2-2494-4B65-ABDC-A0F28ACEC0E3}"
+	ProjectSection(SolutionItems) = preProject
+		renovate.json = renovate.json
+		qodana.yaml = qodana.yaml
+		README.md = README.md
+		nuget.config = nuget.config
+		.gitignore = .gitignore
+		.gitattributes = .gitattributes
+		.editorconfig = .editorconfig
+		.dockerignore = .dockerignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{77D9AF9A-2D81-4644-9977-CC1E1B0F1F9F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimCube.Aspire.Hosting", "src\SimCube.Aspire.Hosting\SimCube.Aspire.Hosting.csproj", "{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimCube.Aspire", "src\SimCube.Aspire\SimCube.Aspire.csproj", "{2D958E75-1DC8-4304-AB07-958734F179E7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "props", "props", "{CBE9CCEB-C7AE-4AC7-8AE0-07CFE2EDF010}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Directory.Packages.props = Directory.Packages.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "scripts", "scripts", "{E812D3FC-4816-42E0-A547-5D5FB318ECD1}"
+	ProjectSection(SolutionItems) = preProject
+		eng\ci.sh = eng\ci.sh
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "github", "github", "{A8142D36-86A3-46A1-8815-B3B652E459B1}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\pull-request.yml = .github\workflows\pull-request.yml
+		.github\workflows\cicd.yml = .github\workflows\cicd.yml
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E} = {77D9AF9A-2D81-4644-9977-CC1E1B0F1F9F}
+		{2D958E75-1DC8-4304-AB07-958734F179E7} = {77D9AF9A-2D81-4644-9977-CC1E1B0F1F9F}
+		{CBE9CCEB-C7AE-4AC7-8AE0-07CFE2EDF010} = {12D2DFC2-2494-4B65-ABDC-A0F28ACEC0E3}
+		{E812D3FC-4816-42E0-A547-5D5FB318ECD1} = {12D2DFC2-2494-4B65-ABDC-A0F28ACEC0E3}
+		{A8142D36-86A3-46A1-8815-B3B652E459B1} = {12D2DFC2-2494-4B65-ABDC-A0F28ACEC0E3}
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9FD0EF40-9EEF-4CD3-862A-F2380BAD9E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D958E75-1DC8-4304-AB07-958734F179E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D958E75-1DC8-4304-AB07-958734F179E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D958E75-1DC8-4304-AB07-958734F179E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D958E75-1DC8-4304-AB07-958734F179E7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
