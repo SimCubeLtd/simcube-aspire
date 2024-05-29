@@ -14,7 +14,7 @@ on:
       - "*"
 
 jobs:
-  clean:
+  ci_cd:
     runs-on: ubuntu-latest
 
     steps:
