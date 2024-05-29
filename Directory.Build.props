@@ -12,13 +12,14 @@
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>NU1803;NU1605</NoWarn>
+    <NoWarn>NU1803;NU1605;NU5104</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Versioning">
     <MinVerDefaultPreReleaseIdentifiers>preview</MinVerDefaultPreReleaseIdentifiers>
     <MinVerTagPrefix>v</MinVerTagPrefix>
     <MinVerVerbosity>quiet</MinVerVerbosity>
+    <MinVerMinimumMajorMinor>1.0</MinVerMinimumMajorMinor>
   </PropertyGroup>
 
 </Project>
