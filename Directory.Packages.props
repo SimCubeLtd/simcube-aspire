@@ -14,7 +14,7 @@
     <PackageVersion Include="Serilog" Version="4.0.0-dev-02201" />
     <PackageVersion Include="Serilog.AspNetCore" Version="8.0.1" />
     <PackageVersion Include="Serilog.Enrichers.Context" Version="4.6.5" />
-    <PackageVersion Include="Serilog.Enrichers.Thread" Version="3.2.0-dev-00756" />
+    <PackageVersion Include="Serilog.Enrichers.Thread" Version="4.0.0" />
     <PackageVersion Include="Serilog.Enrichers.Process" Version="2.0.2" />
     <PackageVersion Include="Serilog.Enrichers.Span" Version="3.1.0" />
     <PackageVersion Include="Serilog.Exceptions" Version="8.4.0" />
