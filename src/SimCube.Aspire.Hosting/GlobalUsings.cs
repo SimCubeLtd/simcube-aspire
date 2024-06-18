@@ -1,5 +1,6 @@
 global using System.Collections.Concurrent;
 global using System.Runtime.ExceptionServices;
+global using Aspirant.Hosting;
 global using Aspire.Hosting;
 global using Aspire.Hosting.ApplicationModel;
 global using Aspire.Hosting.Lifecycle;
