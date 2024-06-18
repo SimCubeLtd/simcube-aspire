@@ -31,6 +31,7 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="Aspirant.Hosting" />
     <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.Seq" />
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
@@ -43,6 +44,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimCube.Aspire\SimCube.Aspire.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Features\Dependencies\" />
   </ItemGroup>
 
 </Project>
