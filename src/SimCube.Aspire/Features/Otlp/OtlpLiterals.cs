@@ -6,4 +6,5 @@ public static class OtlpLiterals
     public const string Headers = "OTEL_EXPORTER_OTLP_HEADERS";
     public const string ResourceAttributes = "OTEL_RESOURCE_ATTRIBUTES";
     public const string ServiceName = "OTEL_SERVICE_NAME";
+    public const string ExposeHealthChecks = "OTEL_EXPOSE_HEALTHCHECKS";
 }
