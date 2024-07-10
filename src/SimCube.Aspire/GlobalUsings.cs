@@ -1,5 +1,6 @@
 global using Microsoft.AspNetCore.Builder;
 global using Microsoft.AspNetCore.Diagnostics.HealthChecks;
+global using Microsoft.Extensions.Configuration;
 global using Microsoft.Extensions.DependencyInjection;
 global using Microsoft.Extensions.Diagnostics.HealthChecks;
 global using Microsoft.Extensions.Hosting;
@@ -15,5 +16,6 @@ global using Serilog.Exceptions;
 global using Serilog.Exceptions.Core;
 global using Serilog.Exceptions.EntityFrameworkCore.Destructurers;
 global using Serilog.Sinks.OpenTelemetry;
+global using Serilog.Sinks.Spectre;
 global using SimCube.Aspire.Features.Otlp;
 global using SimCube.Aspire.Features.Seq;

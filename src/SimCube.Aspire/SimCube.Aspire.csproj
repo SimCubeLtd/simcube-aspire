@@ -53,6 +53,7 @@
     <PackageReference Include="Serilog.Sinks.Console"/>
     <PackageReference Include="Serilog.Sinks.OpenTelemetry"/>
     <PackageReference Include="Serilog.Sinks.Seq" />
+    <PackageReference Include="Serilog.Sinks.Spectre" />
   </ItemGroup>
 
 </Project>

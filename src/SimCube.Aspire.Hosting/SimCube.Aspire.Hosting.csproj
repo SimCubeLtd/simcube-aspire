@@ -46,8 +46,4 @@
     <ProjectReference Include="..\SimCube.Aspire\SimCube.Aspire.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Features\Dependencies\" />
-  </ItemGroup>
-
 </Project>
