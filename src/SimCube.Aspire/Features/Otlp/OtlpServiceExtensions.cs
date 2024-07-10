@@ -56,6 +56,21 @@ public static class OtlpServiceExtensions
 
         return config;
     }
+    
+    public static void MapDefaultEndpoints(this WebApplication app)
+    {
+        if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OTEL_EXPOSE_HEALTHCHECKS")))
+        {
+            return;
+        }
+
+        app.MapHealthChecks("/health");
+
+        app.MapHealthChecks("/alive", new()
+        {
+            Predicate = r => r.Tags.Contains("live")
+        });
+    }
 
     private static void ConfigureSerilog(this IHostApplicationBuilder builder)
     {
