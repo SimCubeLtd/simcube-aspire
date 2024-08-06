@@ -4,9 +4,14 @@ public static class OtlpServiceExtensions
 {
     private const string ConsoleOutputFormat = "[{Timestamp:HH:mm:ss}] | {Level:u4} | {SourceContext} | {Message:lj}{NewLine}{Exception}";
 
-    public static void AddOtlpServiceDefaults(this IHostApplicationBuilder builder)
+    public static void AddOtlpServiceDefaults(this IHostApplicationBuilder builder, string consoleOutputFormat = ConsoleOutputFormat)
     {
-        builder.ConfigureSerilog();
+        if (string.IsNullOrEmpty(consoleOutputFormat))
+        {
+            consoleOutputFormat = ConsoleOutputFormat;
+        }
+        
+        builder.ConfigureSerilog(consoleOutputFormat);
 
         builder.ConfigureOpenTelemetry();
 
@@ -21,7 +26,7 @@ public static class OtlpServiceExtensions
         });
     }
 
-    public static LoggerConfiguration GetLoggerConfiguration(this IConfiguration configuration)
+    public static LoggerConfiguration GetLoggerConfiguration(this IConfiguration configuration, string consoleOutputFormat = ConsoleOutputFormat)
     {
         var config = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
@@ -35,11 +40,11 @@ public static class OtlpServiceExtensions
                 .WithDefaultDestructurers()
                 .WithDestructurers([ new DbUpdateExceptionDestructurer() ]))
             .Enrich.WithProperty(nameof(OtlpLiterals.ServiceName), configuration[OtlpLiterals.ServiceName])
-            .WriteTo.Spectre(outputTemplate: ConsoleOutputFormat);
+            .WriteTo.Spectre(outputTemplate: consoleOutputFormat);
 
         if (!string.IsNullOrEmpty(configuration[OtlpLiterals.Endpoint]))
         {
-            config.WriteTo.OpenTelemetry(options =>
+            config = config.WriteTo.OpenTelemetry(options =>
             {
                 options.IncludedData = IncludedData.TraceIdField | IncludedData.SpanIdField;
                 options.Endpoint = configuration[OtlpLiterals.Endpoint];
@@ -51,7 +56,7 @@ public static class OtlpServiceExtensions
 
         if (!string.IsNullOrEmpty(configuration[SeqLiterals.SeqEndpoint]))
         {
-            config.WriteTo.Seq(configuration[SeqLiterals.SeqEndpoint]);
+            config = config.WriteTo.Seq(configuration[SeqLiterals.SeqEndpoint]);
         }
 
         return config;
@@ -72,11 +77,11 @@ public static class OtlpServiceExtensions
         });
     }
 
-    private static void ConfigureSerilog(this IHostApplicationBuilder builder)
+    private static void ConfigureSerilog(this IHostApplicationBuilder builder, string consoleOutputFormat)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Services.AddSerilog(builder.Configuration.GetLoggerConfiguration().CreateLogger(), true);
+        builder.Services.AddSerilog(builder.Configuration.GetLoggerConfiguration(consoleOutputFormat).CreateLogger(), true);
     }
 
     private static void ConfigureOpenTelemetryLogging(this IHostApplicationBuilder builder) =>
