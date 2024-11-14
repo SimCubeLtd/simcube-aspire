@@ -16,6 +16,8 @@ jobs:
 
     - name: Setup .Net SDK
       uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 9.0.x
 
     - name: Run clean
       run: eng/ci.sh clean

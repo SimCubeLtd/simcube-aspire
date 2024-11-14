@@ -37,12 +37,13 @@ public static class OtlpServiceExtensions
             .Enrich.WithThreadId()
             .Enrich.WithSpan()
             .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
-                .WithDefaultDestructurers()
-                .WithDestructurers([ new DbUpdateExceptionDestructurer() ]))
+                .WithDefaultDestructurers())
             .Enrich.WithProperty(nameof(OtlpLiterals.ServiceName), configuration[OtlpLiterals.ServiceName])
             .WriteTo.Spectre(outputTemplate: consoleOutputFormat);
 
-        if (!string.IsNullOrEmpty(configuration[OtlpLiterals.Endpoint]))
+        var otlpEndpoint = configuration.GetValue(OtlpLiterals.Endpoint, string.Empty);
+        
+        if (!string.IsNullOrEmpty(otlpEndpoint))
         {
             config = config.WriteTo.OpenTelemetry(options =>
             {
@@ -54,9 +55,12 @@ public static class OtlpServiceExtensions
             });
         }
 
-        if (!string.IsNullOrEmpty(configuration[SeqLiterals.SeqEndpoint]))
+        var seqEndpoint = configuration.GetValue(SeqLiterals.SeqEndpoint, string.Empty);
+        
+        if (!string.IsNullOrEmpty(seqEndpoint))
         {
-            config = config.WriteTo.Seq(configuration[SeqLiterals.SeqEndpoint]);
+            var apiKey = configuration.GetValue(SeqLiterals.SeqApiKey, string.Empty);
+            config = config.WriteTo.Seq(serverUrl: seqEndpoint, apiKey: apiKey);
         }
 
         return config;
@@ -73,7 +77,7 @@ public static class OtlpServiceExtensions
 
         app.MapHealthChecks("/alive", new()
         {
-            Predicate = r => r.Tags.Contains("live")
+            Predicate = r => r.Tags.Contains("live"),
         });
     }
 
@@ -110,7 +114,7 @@ public static class OtlpServiceExtensions
             .WithTracing(tracing =>
             {
                 tracing.AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = request =>
+                    .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
                         !request.RequestUri?.AbsoluteUri.Contains(builder.Configuration[OtlpLiterals.Endpoint],
                             StringComparison.Ordinal) ?? true);
             });

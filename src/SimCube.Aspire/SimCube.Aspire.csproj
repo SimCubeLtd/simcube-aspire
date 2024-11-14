@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
         <OutputType>Library</OutputType>
     </PropertyGroup>
 
@@ -49,7 +49,6 @@
     <PackageReference Include="Serilog.Enrichers.Process"/>
     <PackageReference Include="Serilog.Enrichers.Span"/>
     <PackageReference Include="Serilog.Exceptions"/>
-    <PackageReference Include="Serilog.Exceptions.EntityFrameworkCore"/>
     <PackageReference Include="Serilog.Sinks.Console"/>
     <PackageReference Include="Serilog.Sinks.OpenTelemetry"/>
     <PackageReference Include="Serilog.Sinks.Seq" />
