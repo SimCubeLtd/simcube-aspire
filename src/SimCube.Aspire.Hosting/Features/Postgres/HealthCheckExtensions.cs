@@ -1,3 +1,5 @@
+using HealthCheckAnnotation = SimCube.Aspire.Hosting.Features.HealthChecks.HealthCheckAnnotation;
+
 namespace SimCube.Aspire.Hosting.Features.Postgres;
 
 public static class PostgreSqlHealthCheckExtensions
