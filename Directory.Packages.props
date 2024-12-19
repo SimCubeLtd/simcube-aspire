@@ -6,8 +6,8 @@
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="8.2.2" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="8.10.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="8.2.2" />
-    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="8.0.2" />
-    <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="8.0.1" />
+    <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
+    <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="9.0.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net9.0' ">
     <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.0.0" />
