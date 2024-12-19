@@ -50,6 +50,7 @@
     <PackageReference Include="Serilog.Enrichers.Span"/>
     <PackageReference Include="Serilog.Exceptions"/>
     <PackageReference Include="Serilog.Sinks.Console"/>
+    <PackageReference Include="Serilog.Sinks.Grafana.Loki" />
     <PackageReference Include="Serilog.Sinks.OpenTelemetry"/>
     <PackageReference Include="Serilog.Sinks.Seq" />
     <PackageReference Include="Serilog.Sinks.Spectre" />
