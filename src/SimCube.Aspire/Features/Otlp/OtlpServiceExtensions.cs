@@ -4,14 +4,18 @@ public static class OtlpServiceExtensions
 {
     private const string ConsoleOutputFormat = "[{Timestamp:HH:mm:ss}] | {Level:u4} | {SourceContext} | {Message:lj}{NewLine}{Exception}";
 
-    public static void AddOtlpServiceDefaults(this IHostApplicationBuilder builder, string consoleOutputFormat = ConsoleOutputFormat)
+    public static void AddOtlpServiceDefaults(
+        this IHostApplicationBuilder builder,
+        string consoleOutputFormat = ConsoleOutputFormat,
+        bool lokiCompatible = false,
+        bool rawCompactJson = false)
     {
         if (string.IsNullOrEmpty(consoleOutputFormat))
         {
             consoleOutputFormat = ConsoleOutputFormat;
         }
         
-        builder.ConfigureSerilog(consoleOutputFormat);
+        builder.ConfigureSerilog(consoleOutputFormat, lokiCompatible, rawCompactJson);
 
         builder.ConfigureOpenTelemetry();
 
@@ -26,7 +30,11 @@ public static class OtlpServiceExtensions
         });
     }
 
-    public static LoggerConfiguration GetLoggerConfiguration(this IConfiguration configuration, string consoleOutputFormat = ConsoleOutputFormat)
+    public static LoggerConfiguration GetLoggerConfiguration(
+        this IConfiguration configuration,
+        string consoleOutputFormat = ConsoleOutputFormat,
+        bool lokiCompatible = false,
+        bool rawCompactJson = false)
     {
         var config = new LoggerConfiguration()
             .ReadFrom.Configuration(configuration)
@@ -38,9 +46,14 @@ public static class OtlpServiceExtensions
             .Enrich.WithSpan()
             .Enrich.WithExceptionDetails(new DestructuringOptionsBuilder()
                 .WithDefaultDestructurers())
-            .Enrich.WithProperty(nameof(OtlpLiterals.ServiceName), configuration[OtlpLiterals.ServiceName])
-            .WriteTo.Spectre(outputTemplate: consoleOutputFormat);
+            .Enrich.WithProperty(nameof(OtlpLiterals.ServiceName), configuration[OtlpLiterals.ServiceName]);
 
+        config = lokiCompatible switch
+        {
+            true => config.WriteTo.Console(rawCompactJson ? new RenderedCompactJsonFormatter() : new LokiJsonTextFormatter()),
+            false => config.WriteTo.Spectre(outputTemplate: consoleOutputFormat),
+        };
+        
         var otlpEndpoint = configuration.GetValue(OtlpLiterals.Endpoint, string.Empty);
         
         if (!string.IsNullOrEmpty(otlpEndpoint))
@@ -81,11 +94,11 @@ public static class OtlpServiceExtensions
         });
     }
 
-    private static void ConfigureSerilog(this IHostApplicationBuilder builder, string consoleOutputFormat)
+    private static void ConfigureSerilog(this IHostApplicationBuilder builder, string consoleOutputFormat, bool lokiCompatible, bool rawCompactJson)
     {
         ArgumentNullException.ThrowIfNull(builder);
 
-        builder.Services.AddSerilog(builder.Configuration.GetLoggerConfiguration(consoleOutputFormat).CreateLogger(), true);
+        builder.Services.AddSerilog(builder.Configuration.GetLoggerConfiguration(consoleOutputFormat, lokiCompatible, rawCompactJson).CreateLogger(), true);
     }
 
     private static void ConfigureOpenTelemetryLogging(this IHostApplicationBuilder builder) =>
