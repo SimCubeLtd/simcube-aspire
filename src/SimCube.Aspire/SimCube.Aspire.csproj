@@ -56,4 +56,8 @@
     <PackageReference Include="Serilog.Sinks.Spectre" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.1.0" />
+  </ItemGroup>
+
 </Project>
