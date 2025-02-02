@@ -15,7 +15,7 @@ public static class OtlpHostBuilderExtensions
         
         builder.ConfigureLogging((ctx, loggingBuilder) => ConfigureLogging(ctx, loggingBuilder, consoleOutputFormat, lokiCompatible, rawCompactJson));
         
-        builder.ConfigureServices(ConfigureOtlpServices);
+        builder.ConfigureServices((ctx, services) => ConfigureOtlpServices(ctx.Configuration, services));
         builder.ConfigureServices(ConfigureHttpClientWithServiceDiscovery);
     }
     
@@ -42,12 +42,12 @@ public static class OtlpHostBuilderExtensions
         });
     }
 
-    public static void ConfigureOtlpServices(HostBuilderContext ctx, IServiceCollection services)
+    public static void ConfigureOtlpServices(IConfiguration configuration, IServiceCollection services)
     {
         services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
 
-        if (!string.IsNullOrEmpty(ctx.Configuration[OtlpLiterals.Endpoint]))
+        if (!string.IsNullOrEmpty(configuration[OtlpLiterals.Endpoint]))
         {
                services.AddOpenTelemetry()
                 .WithMetrics(
@@ -64,11 +64,11 @@ public static class OtlpHostBuilderExtensions
                             .AddHttpClientInstrumentation(
                                 options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
                                     !request.RequestUri?.AbsoluteUri.Contains(
-                                        ctx.Configuration[OtlpLiterals.Endpoint],
+                                        configuration[OtlpLiterals.Endpoint],
                                         StringComparison.Ordinal) ?? true);
                     });
 
-            var useOtlpExporter = !string.IsNullOrWhiteSpace(ctx.Configuration[OtlpLiterals.Endpoint]);
+            var useOtlpExporter = !string.IsNullOrWhiteSpace(configuration[OtlpLiterals.Endpoint]);
 
             if (useOtlpExporter)
             {
