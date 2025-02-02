@@ -15,8 +15,17 @@ public static class OtlpHostBuilderExtensions
         
         builder.ConfigureLogging((ctx, loggingBuilder) => ConfigureLogging(ctx, loggingBuilder, consoleOutputFormat, lokiCompatible, rawCompactJson));
         
-        builder.ConfigureServices(ConfigureServices);
+        builder.ConfigureServices(ConfigureOtlpServices);
+        builder.ConfigureServices(ConfigureHttpClientWithServiceDiscovery);
     }
+    
+    public static void ConfigureOtlpLogging(ILoggingBuilder loggingBuilder) =>
+        loggingBuilder.AddOpenTelemetry(
+            logging =>
+            {
+                logging.IncludeFormattedMessage = true;
+                logging.IncludeScopes = true;
+            });
     
     public static void MapHealthcheckEndpoints(this WebApplication app)
     {
@@ -33,18 +42,10 @@ public static class OtlpHostBuilderExtensions
         });
     }
 
-    private static void ConfigureServices(HostBuilderContext ctx, IServiceCollection services)
+    public static void ConfigureOtlpServices(HostBuilderContext ctx, IServiceCollection services)
     {
         services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
-        
-        services.AddServiceDiscovery();
-
-        services.ConfigureHttpClientDefaults(http =>
-        {
-            http.AddStandardResilienceHandler();
-            http.AddServiceDiscovery();
-        });
 
         if (!string.IsNullOrEmpty(ctx.Configuration[OtlpLiterals.Endpoint]))
         {
@@ -76,6 +77,17 @@ public static class OtlpHostBuilderExtensions
         }
     }
 
+    public static void ConfigureHttpClientWithServiceDiscovery(IServiceCollection services)
+    {
+        services.AddServiceDiscovery();
+
+        services.ConfigureHttpClientDefaults(http =>
+        {
+            http.AddStandardResilienceHandler();
+            http.AddServiceDiscovery();
+        });
+    }
+
     private static void ConfigureLogging(HostBuilderContext ctx,
         ILoggingBuilder loggingBuilder,
         string consoleOutputFormat,
@@ -93,11 +105,6 @@ public static class OtlpHostBuilderExtensions
             return;
         }
         
-        loggingBuilder.AddOpenTelemetry(
-            logging =>
-            {
-                logging.IncludeFormattedMessage = true;
-                logging.IncludeScopes = true;
-            });
+        ConfigureOtlpLogging(loggingBuilder);
     }
 }
