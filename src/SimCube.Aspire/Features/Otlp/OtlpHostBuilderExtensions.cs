@@ -1,3 +1,5 @@
+using OpenTelemetry.Logs;
+
 namespace SimCube.Aspire.Features.Otlp;
 
 public static class OtlpHostBuilderExtensions
@@ -6,27 +8,38 @@ public static class OtlpHostBuilderExtensions
         this IHostBuilder builder,
         string consoleOutputFormat = OtlpLoggingExtensions.ConsoleOutputFormat,
         bool lokiCompatible = false,
-        bool rawCompactJson = false)
+        bool rawCompactJson = false,
+        Action<OpenTelemetryLoggerOptions>? configureLogger = null,
+        Action<MeterProviderBuilder>? configureMeters = null, 
+        Action<TracerProviderBuilder>? configureTracer = null)
     {
         if (string.IsNullOrEmpty(consoleOutputFormat))
         {
             consoleOutputFormat = OtlpLoggingExtensions.ConsoleOutputFormat;
         }
         
-        builder.ConfigureLogging((ctx, loggingBuilder) => ConfigureLogging(ctx, loggingBuilder, consoleOutputFormat, lokiCompatible, rawCompactJson));
+        builder.ConfigureLogging((ctx, loggingBuilder) => ConfigureLogging(ctx, loggingBuilder, consoleOutputFormat, lokiCompatible, rawCompactJson, configureLogger));
         
-        builder.ConfigureServices((ctx, services) => ConfigureOtlpServices(ctx.Configuration, services));
+        builder.ConfigureServices((ctx, services) => ConfigureOtlpServices(ctx.Configuration, services, configureMeters, configureTracer));
         builder.ConfigureServices(ConfigureHttpClientWithServiceDiscovery);
     }
     
-    public static void ConfigureOtlpLogging(ILoggingBuilder loggingBuilder) =>
+    public static void ConfigureOtlpLogging(ILoggingBuilder loggingBuilder, Action<OpenTelemetryLoggerOptions>? configureLogger)
+    {
+        if (configureLogger is not null)
+        {
+            loggingBuilder.AddOpenTelemetry(configureLogger);
+            return;
+        }
+        
         loggingBuilder.AddOpenTelemetry(
             logging =>
             {
                 logging.IncludeFormattedMessage = true;
                 logging.IncludeScopes = true;
             });
-    
+    }
+
     public static void MapHealthcheckEndpoints(this WebApplication app)
     {
         if (string.IsNullOrEmpty(Environment.GetEnvironmentVariable("OTEL_EXPOSE_HEALTHCHECKS")))
@@ -42,7 +55,11 @@ public static class OtlpHostBuilderExtensions
         });
     }
 
-    public static void ConfigureOtlpServices(IConfiguration configuration, IServiceCollection services)
+    public static void ConfigureOtlpServices(
+        IConfiguration configuration, 
+        IServiceCollection services, 
+        Action<MeterProviderBuilder>? configureMeters = null, 
+        Action<TracerProviderBuilder>? configureTracer = null)
     {
         services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
@@ -53,19 +70,14 @@ public static class OtlpHostBuilderExtensions
                 .WithMetrics(
                     metrics =>
                     {
-                        metrics.AddAspNetCoreInstrumentation()
-                            .AddHttpClientInstrumentation()
-                            .AddRuntimeInstrumentation();
+                        AddDefaultMetricConfiguration(metrics);
+                        configureMeters?.Invoke(metrics);
                     })
                 .WithTracing(
                     tracing =>
                     {
-                        tracing.AddAspNetCoreInstrumentation()
-                            .AddHttpClientInstrumentation(
-                                options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
-                                    !request.RequestUri?.AbsoluteUri.Contains(
-                                        configuration[OtlpLiterals.Endpoint],
-                                        StringComparison.Ordinal) ?? true);
+                        AddDefaultTracing(configuration, tracing);
+                        configureTracer?.Invoke(tracing);
                     });
 
             var useOtlpExporter = !string.IsNullOrWhiteSpace(configuration[OtlpLiterals.Endpoint]);
@@ -92,7 +104,8 @@ public static class OtlpHostBuilderExtensions
         ILoggingBuilder loggingBuilder,
         string consoleOutputFormat,
         bool lokiCompatible,
-        bool rawCompactJson)
+        bool rawCompactJson,
+        Action<OpenTelemetryLoggerOptions>? configureLogger = null)
     {
         loggingBuilder.ClearProviders();
 
@@ -105,6 +118,19 @@ public static class OtlpHostBuilderExtensions
             return;
         }
         
-        ConfigureOtlpLogging(loggingBuilder);
+        ConfigureOtlpLogging(loggingBuilder, configureLogger);
     }
+    
+    private static void AddDefaultTracing(IConfiguration configuration, TracerProviderBuilder tracing) =>
+        tracing.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation(
+                options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
+                    !request.RequestUri?.AbsoluteUri.Contains(
+                        configuration[OtlpLiterals.Endpoint],
+                        StringComparison.Ordinal) ?? true);
+
+    private static void AddDefaultMetricConfiguration(MeterProviderBuilder metrics) =>
+        metrics.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation();
 }
