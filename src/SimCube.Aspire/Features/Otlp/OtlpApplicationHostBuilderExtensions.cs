@@ -1,3 +1,5 @@
+using OpenTelemetry.Logs;
+
 namespace SimCube.Aspire.Features.Otlp;
 
 public static class OtlpApplicationHostBuilderExtensions
@@ -6,7 +8,10 @@ public static class OtlpApplicationHostBuilderExtensions
         this IHostApplicationBuilder builder,
         string consoleOutputFormat = OtlpLoggingExtensions.ConsoleOutputFormat,
         bool lokiCompatible = false,
-        bool rawCompactJson = false)
+        bool rawCompactJson = false,
+        Action<OpenTelemetryLoggerOptions>? configureLogger = null,
+        Action<MeterProviderBuilder>? configureMeters = null, 
+        Action<TracerProviderBuilder>? configureTracer = null)
     {
         if (string.IsNullOrEmpty(consoleOutputFormat))
         {
@@ -15,7 +20,7 @@ public static class OtlpApplicationHostBuilderExtensions
         
         builder.ConfigureSerilog(consoleOutputFormat, lokiCompatible, rawCompactJson);
 
-        builder.ConfigureOpenTelemetry();
+        builder.ConfigureOpenTelemetry(configureLogger, configureMeters, configureTracer);
 
         builder.AddDefaultHealthChecks();
 
@@ -52,35 +57,45 @@ public static class OtlpApplicationHostBuilderExtensions
         builder.Services.AddSerilog(builder.Configuration.GetLoggerConfiguration(consoleOutputFormat, lokiCompatible, rawCompactJson).CreateLogger(), true);
     }
 
-    private static void ConfigureOpenTelemetryLogging(this IHostApplicationBuilder builder) =>
-        builder.Logging.AddOpenTelemetry(logging =>
+    private static void ConfigureOpenTelemetryLogging(this IHostApplicationBuilder builder, Action<OpenTelemetryLoggerOptions>? configure = null)
+    {
+        if (configure is not null)
         {
-            logging.IncludeFormattedMessage = true;
-            logging.IncludeScopes = true;
-        });
+            builder.Logging.AddOpenTelemetry(configure);
+            return;
+        }
+        
+        builder.Logging.AddOpenTelemetry(
+            logging =>
+            {
+                logging.IncludeFormattedMessage = true;
+                logging.IncludeScopes = true;
+            });
+    }
 
-    private static void ConfigureOpenTelemetry(this IHostApplicationBuilder builder)
+    private static void ConfigureOpenTelemetry(
+        this IHostApplicationBuilder builder, 
+        Action<OpenTelemetryLoggerOptions>? configureLogger = null,
+        Action<MeterProviderBuilder>? configureMeters = null, 
+        Action<TracerProviderBuilder>? configureTracer = null)
     {
         if (string.IsNullOrEmpty(builder.Configuration[OtlpLiterals.Endpoint]))
         {
             return;
         }
 
-        builder.ConfigureOpenTelemetryLogging();
+        builder.ConfigureOpenTelemetryLogging(configureLogger);
 
         builder.Services.AddOpenTelemetry()
             .WithMetrics(metrics =>
             {
-                metrics.AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation();
+                metrics.AddDefaultMetricConfiguration();
+                configureMeters?.Invoke(metrics);
             })
             .WithTracing(tracing =>
             {
-                tracing.AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
-                        !request.RequestUri?.AbsoluteUri.Contains(builder.Configuration[OtlpLiterals.Endpoint],
-                            StringComparison.Ordinal) ?? true);
+                tracing.AddDefaultTracing(builder.Configuration);
+                configureTracer?.Invoke(tracing);
             });
 
         builder.AddOpenTelemetryExporters();
@@ -99,4 +114,15 @@ public static class OtlpApplicationHostBuilderExtensions
     private static void AddDefaultHealthChecks(this IHostApplicationBuilder builder) =>
         builder.Services.AddHealthChecks()
             .AddCheck("self", () => HealthCheckResult.Healthy(), ["live"]);
+    
+    private static void AddDefaultTracing(this TracerProviderBuilder tracing, IConfiguration configuration) =>
+        tracing.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
+                !request.RequestUri?.AbsoluteUri.Contains(configuration[OtlpLiterals.Endpoint],
+                    StringComparison.Ordinal) ?? true);
+
+    private static void AddDefaultMetricConfiguration(this MeterProviderBuilder metrics) =>
+        metrics.AddAspNetCoreInstrumentation()
+            .AddHttpClientInstrumentation()
+            .AddRuntimeInstrumentation();
 }
