@@ -12,7 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "eng", "eng", "{12D2DFC2-249
 		.gitignore = .gitignore
 		.gitattributes = .gitattributes
 		.editorconfig = .editorconfig
-		.dockerignore = .dockerignore
 		LICENSE.md = LICENSE.md
 		.whitesource = .whitesource
 	EndProjectSection

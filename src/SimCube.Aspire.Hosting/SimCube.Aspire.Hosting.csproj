@@ -46,8 +46,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageVersion Update="Aspire.Hosting.PostgreSQL" Version="9.1.0" />
-    <PackageVersion Update="Aspire.Hosting.Seq" Version="9.1.0" />
+    <PackageVersion Update="Aspire.Hosting.PostgreSQL" Version="9.2.0" />
+    <PackageVersion Update="Aspire.Hosting.Seq" Version="9.2.0" />
   </ItemGroup>
 
 </Project>
