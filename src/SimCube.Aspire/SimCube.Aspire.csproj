@@ -58,7 +58,7 @@
 
   <ItemGroup>
     <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
-    <PackageVersion Update="Aspire.Seq" Version="9.2.0" />
+    <PackageVersion Update="Aspire.Seq" Version="13.0.0" />
     <PackageVersion Update="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
   </ItemGroup>
 

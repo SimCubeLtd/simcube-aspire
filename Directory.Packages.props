@@ -1,11 +1,11 @@
 <Project>
   <ItemGroup>
-    <PackageVersion Include="Aspire.Npgsql" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Npgsql" Version="13.0.0" />
     <PackageVersion Include="Serilog.Sinks.Seq" Version="9.0.0" />
-    <PackageVersion Include="Aspire.Hosting.AppHost" Version="9.2.0" />
-    <PackageVersion Include="Aspire.Hosting.Seq" Version="9.2.0" />
-    <PackageVersion Include="Aspire.Seq" Version="9.2.0" />
-    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.2.0" />
+    <PackageVersion Include="Aspire.Hosting.AppHost" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.Seq" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Seq" Version="13.0.0" />
+    <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="13.0.0" />
     <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
     <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
