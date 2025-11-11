@@ -6,8 +6,8 @@
     <PackageVersion Include="Aspire.Hosting.Seq" Version="9.2.0" />
     <PackageVersion Include="Aspire.Seq" Version="9.2.0" />
     <PackageVersion Include="Aspire.Hosting.PostgreSQL" Version="9.2.0" />
-    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
-    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
+    <PackageVersion Include="Microsoft.Extensions.Http.Resilience" Version="10.0.0" />
+    <PackageVersion Include="Microsoft.Extensions.ServiceDiscovery" Version="10.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.NpgSql" Version="9.0.0" />
     <PackageVersion Include="AspNetCore.HealthChecks.Uris" Version="9.0.0" />
     <PackageVersion Include="Serilog.AspNetCore" Version="9.0.0" />
