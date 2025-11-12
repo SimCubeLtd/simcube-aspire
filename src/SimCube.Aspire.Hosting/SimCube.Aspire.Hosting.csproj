@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net9.0;net8.0;</TargetFrameworks>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
         <OutputType>Library</OutputType>
     </PropertyGroup>
 
@@ -31,10 +31,12 @@
 
   <ItemGroup>
     <FrameworkReference Include="Microsoft.AspNetCore.App" />
-      <PackageReference Include="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Include="Aspire.Hosting.PostgreSQL" />
     <PackageReference Include="Aspire.Hosting.Seq" />
     <PackageReference Include="AspNetCore.HealthChecks.NpgSql" />
     <PackageReference Include="AspNetCore.HealthChecks.Uris" />
+    <PackageReference Update="Aspire.Hosting.PostgreSQL" />
+    <PackageReference Update="Aspire.Hosting.Seq" />
     <PackageReference Include="MinVer">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -43,11 +45,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SimCube.Aspire\SimCube.Aspire.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageVersion Update="Aspire.Hosting.PostgreSQL" Version="9.2.0" />
-    <PackageVersion Update="Aspire.Hosting.Seq" Version="9.2.0" />
   </ItemGroup>
 
 </Project>

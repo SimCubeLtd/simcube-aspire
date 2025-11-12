@@ -124,8 +124,7 @@ public static class OtlpHostBuilderExtensions
     private static void AddDefaultTracing(IConfiguration configuration, TracerProviderBuilder tracing) =>
         tracing.AddAspNetCoreInstrumentation()
             .AddHttpClientInstrumentation(
-                options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
-                    !request.RequestUri?.AbsoluteUri.Contains(
+                options => options.FilterHttpRequestMessage = request => !request.RequestUri?.AbsoluteUri.Contains(
                         configuration[OtlpLiterals.Endpoint],
                         StringComparison.Ordinal) ?? true);
 

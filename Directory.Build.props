@@ -12,7 +12,6 @@
     <NoDefaultExcludes>true</NoDefaultExcludes>
     <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <NoWarn>NU1803;NU1605;NU5104</NoWarn>
   </PropertyGroup>
     
     <ItemGroup>

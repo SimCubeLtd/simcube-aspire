@@ -1,0 +1,28 @@
+<Solution>
+  <Folder Name="/eng/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path=".whitesource" />
+    <File Path="LICENSE.md" />
+    <File Path="nuget.config" />
+    <File Path="qodana.yaml" />
+    <File Path="README.md" />
+    <File Path="renovate.json" />
+  </Folder>
+  <Folder Name="/eng/github/">
+    <File Path=".github/workflows/cicd.yml" />
+    <File Path=".github/workflows/pull-request.yml" />
+  </Folder>
+  <Folder Name="/eng/props/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/eng/scripts/">
+    <File Path="eng/ci.sh" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src/SimCube.Aspire.Hosting/SimCube.Aspire.Hosting.csproj" />
+    <Project Path="src/SimCube.Aspire/SimCube.Aspire.csproj" />
+  </Folder>
+</Solution>
