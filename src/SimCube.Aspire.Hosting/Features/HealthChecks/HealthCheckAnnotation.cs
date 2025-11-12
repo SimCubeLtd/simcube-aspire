@@ -13,13 +13,7 @@ public class HealthCheckAnnotation(Func<IResource, CancellationToken, Task<IHeal
     /// <param name="connectionStringFactory"></param>
     /// <returns>A new <see cref="HealthCheckAnnotation"/>.</returns>
     public static HealthCheckAnnotation Create(Func<string, IHealthCheck> connectionStringFactory) =>
-        new(async (resource, token) =>
-        {
-            if (resource is not IResourceWithConnectionString c)
-            {
-                return null;
-            }
-
-            return await c.GetConnectionStringAsync(token) is not { } cs ? null : connectionStringFactory(cs);
-        });
+        new(async (resource, token) => resource is not IResourceWithConnectionString c
+            ?  null
+            : await c.GetConnectionStringAsync(token) is not { } cs ? null : connectionStringFactory(cs));
 }

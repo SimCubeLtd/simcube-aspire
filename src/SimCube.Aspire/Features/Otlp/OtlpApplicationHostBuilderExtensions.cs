@@ -117,8 +117,7 @@ public static class OtlpApplicationHostBuilderExtensions
     
     private static void AddDefaultTracing(this TracerProviderBuilder tracing, IConfiguration configuration) =>
         tracing.AddAspNetCoreInstrumentation()
-            .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = (HttpRequestMessage request) =>
-                !request.RequestUri?.AbsoluteUri.Contains(configuration[OtlpLiterals.Endpoint],
+            .AddHttpClientInstrumentation(options => options.FilterHttpRequestMessage = request => !request.RequestUri?.AbsoluteUri.Contains(configuration[OtlpLiterals.Endpoint],
                     StringComparison.Ordinal) ?? true);
 
     private static void AddDefaultMetricConfiguration(this MeterProviderBuilder metrics) =>

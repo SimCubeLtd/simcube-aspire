@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFrameworks>net9.0;net8.0</TargetFrameworks>
+        <TargetFrameworks>net9.0;net10.0</TargetFrameworks>
         <OutputType>Library</OutputType>
     </PropertyGroup>
 
@@ -54,12 +54,6 @@
     <PackageReference Include="Serilog.Sinks.OpenTelemetry"/>
     <PackageReference Include="Serilog.Sinks.Seq" />
     <PackageReference Include="Serilog.Sinks.Spectre" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageVersion Update="Microsoft.Extensions.Http.Resilience" Version="9.4.0" />
-    <PackageVersion Update="Aspire.Seq" Version="9.2.0" />
-    <PackageVersion Update="Microsoft.Extensions.ServiceDiscovery" Version="9.2.0" />
   </ItemGroup>
 
 </Project>
